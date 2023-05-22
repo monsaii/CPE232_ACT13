@@ -1,0 +1,30 @@
+- name: Install Chrony (Ubuntu)
+  apt:
+    name: chrony
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Configuring the chrony.conf (Controller node)
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    line: server 192.168.56.134 iburst
+  when: ansible_distribution == "Ubuntu"
+
+- name: Configuring the chrony.conf (Other nodes)
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    line: server controller iburst
+  when: ansible_distribution == "Ubuntu"
+
+- name: restarting chrony
+  shell: service chrony restart
+  when: ansible_distribution == "Ubuntu"
+
+- block:
+  - name: Verifying if already active and running the Chrony.
+    shell: systemctl status chrony
+    register: Chrony_service
+
+  - debug:
+      msg="{{ Chrony_service }}"

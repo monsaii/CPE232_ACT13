@@ -1,0 +1,6 @@
+[controller_node]
+192.168.56.108
+#ansible_user=opensuse
+
+[Ubuntu]
+192.168.56.108
